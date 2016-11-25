@@ -1,0 +1,334 @@
+<!doctype html>
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>HiLoader</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="apple-touch-icon" href="apple-touch-icon.png">
+	<link rel="stylesheet" href="css/main.css">
+	<!--[if lt IE 9]>
+            <script src="js/vendor/html5-3.6-respond-1.4.2.min.js"></script>
+        <![endif]-->
+</head>
+
+<body>
+	<!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+	<div class="b-preloader animated yt-loader">
+		<div class="b-preloader__decor"></div>
+	</div>
+	
+	<!-- .b-header -->
+	<div class="b-main-container" id="content">
+
+		<Br>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-2">
+				</div>
+				
+				<div class="col-md-8">
+					<div class="b-form-cont">
+						<h2 class="b-form-cont__title">Upload new file to the internet</h2>
+						<div class="b-form b-form--place container-fluid">
+							<div class="b-form__row row">
+								<div class="col-md-12">
+								<input type="text" name='itutle' id='ititle' required placeholder="Enter Title"> </div>
+							</div>
+
+							<div class="b-form__row row">
+								<div class="col-md-12">
+									<form action="/file-upload" id='drop2' class="dropzone" id="my-awesome-dropzone">
+									<div class="dz-message" data-dz-message><span>Drop here <b>public</b> preview image or video.</span></div>	
+			
+									</form>
+									<a href='#' onclick='$("#descr").show();$(this).hide();return false'>Add description</a>
+									<textarea name='descr' style='display:none' class='form-control' id='descr'></textarea>
+								</div>
+							</div>
+							
+							<div class="b-form__row row">
+								<div class="col-md-12">
+									<form action="/file-upload" id='drop1' class="dropzone" id="my-awesome-dropzone">
+									<div class="dz-message" data-dz-message><span>Drop here <b>main</b> file.</span></div>
+									</form>
+									<a href='#' onclick='$("#locker").toggle();$("#sharelock").click();$(this).hide();return false'><i class="fmr fmr-icon-140"></i> Enable social locker</a>
+								
+								</div>
+								
+								
+								<style>
+							.ff label {
+							margin-top:0;
+							padding:10px;
+							font-size:16px;
+							}
+							.ff input {
+							 
+							 margin-right:5px;
+							}
+							
+							
+							</style>
+								<div style='display:none' id='locker' class="col-md-12 ff">
+								
+								
+								<label><input type='radio' onclick='$(".met").hide();$("#s"+$(this).val()).show();' id='sharelock' name='locker' value='share'>Share for unlock. Users will share your file to own social networks like twitter, facebook before get secret file</label>
+								
+								<!--
+								<label><input type='radio' onclick='$(".met").hide();$("#s"+$(this).val()).show();' name='locker' value='pay'>Pay for unlock. Users will PAY directly to your own bitcoin address before get secret file</label>
+									<div id='spay' class='met' style='display:none'>
+									<div class="b-form__row row">
+										<div class="col-md-12">
+										<input type="text" name='btcaddress' id='btcaddress' onchange='' placeholder="Your bitcoin address"> </div>
+									</div>
+									
+									<div class="b-form__row row">
+										<div class="col-md-12">
+										<input type="text" name='itutle' id='ititle' placeholder="Price in BTC"> 
+										</div>
+									</div>
+									</div>
+								
+								-->
+								<label><input type='radio' onclick='$(".met").hide();$("#s"+$(this).val()).show();' name='locker' value='no'>No locker</label>
+								
+								</div>
+								
+							</div>			
+							
+							<div class="b-form__row row">
+							<div class="col-md-3 col-sm-3"> <a href="#" onclick='gen();return false' class="noajax btn">Publish</a>
+							</div>
+							<div class="col-md-9 col-sm-9">
+							<input type="text" id='mepass3' class='inpt23' onclick='$(this).select();' value='' name='psp3' placeholder="Here will showed final URL"> 
+									
+							</div>
+							</div>
+							
+							<input type='hidden' name='' id='xpublic' class='form-control' value=''>
+							<input type='hidden' name='' id='xpublictype' class='form-control' value=''>
+							<input type='hidden' name='' id='xsecret' class='form-control' value=''>
+							
+							<script>
+							String.prototype.replaceAll = function(search, replacement) {
+								var target = this;
+								return target.replace(new RegExp(search, 'g'), replacement);
+							};
+							var xsecret,xpublic,xtitle;
+							
+							
+							
+							function gen() {
+								
+								
+								if (!$("#xsecret").val()) {alert("Upload secret file!");return false;}
+								if (!$("#ititle").val()) {alert("Enter title!");return false;}
+								
+								
+								
+								
+								
+								$.get("./hiloader.html",function(d){
+								
+								if ($("#xpublictype").val().match(/video/)) d = d.replace(/<img src='xpublic'>/,"<video  style='' controls autoplay><source src=xpublic>Your browser does not support the video tag.</video>");
+									
+									if (!$("#xpublic").val()) {d = d.replace(/<img src='xpublic'>/,"");}
+									d = d.replaceAll(/xtitle/,$("#ititle").val());
+									d = d.replace(/xpublic/,$("#xpublic").val());
+									d = d.replace(/xsecret/,$("#xsecret").val());
+									d = d.replace(/xsecret/,$("#xsecret").val());
+									d = d.replace(/xsecret/,$("#xsecret").val());
+									d = d.replace(/xdescr/,$("#descr").val());
+									
+									d = d.replace('<script async','<center><br><br><a href=http://hiloader.org/>Uploaded by HiLoader - unlimited & anonimous secret file storage based on #IPFS (web torrent).</a></center><script async');
+									
+									
+									if (!$("#sharelock").is(":checked")) d = d.replace(/sharelockenabled/,"sharelockdisabled");
+									
+									var boundary = "---------------------------7da24f2e50046";
+									var body = '--' + boundary + '\r\n'
+											 // Parameter name is "file" and local filename is "temp.txt"
+											 + 'Content-Disposition: form-data; name="file";'
+											 + 'filename="temp.html"\r\n'
+											 // Add the file's mime-type
+											 + 'Content-type: plain/text\r\n\r\n'
+											 // Add your data:
+											 + d + '\r\n'
+											 + '--'+ boundary + '--';
+
+									$.ajax({
+										contentType: "multipart/form-data; boundary="+boundary,
+										data: body,
+										type: "POST",
+										url: "http://localhost:8081/upload",
+										success: function (data, status) {
+											$("#sic").show();
+											$(".inpt23").val(data);
+										}
+									});
+									
+								});							
+							}
+							</script>
+							<!--
+							готово	
+							-->
+						
+							
+						</div>
+					</div>
+				
+			
+				</div>
+				
+				
+			</div>
+			<!-- .row -->
+			
+							
+		</div>
+
+		
+			<!-- генерация ключа -->
+		<div class="hidden b-jquery-popup">
+		<div class="b-form-reg-popup">
+		<h2 class="b-form-reg-popup__title m--centered">Done! Share this link</h2>
+		<div style='display:none' class="b-form__row clearfix">
+		<a href="#" class="b-form-reg-popup__facebook press--left"><img width="206" height="58" src="img/facebook-link.jpg" alt="">
+		</a>
+		<a href="#" class="b-form-reg-popup__google press--right"><img width="206" height="58" src="img/google-link.jpg" alt="">
+		</a>
+		</div>
+
+		<div class="b-form__row" id='stp2'>
+		<input type="text" id='mepass3' class='inpt23' onclick='$(this).select();' value='https://ipfs.io/ipfs/QmQZ5Qza6LhrDDsbpmJkVzvUsekqyMpKDBj9uLe7TpCcqP' name='psp3' placeholder="link"> 
+		</div>
+		
+
+		
+		<div class="b-form__row m--centered" style='margin:auto;margin-left:135px'> 
+		<Br>
+		<!-- AddToAny BEGIN -->
+		<!-- AddToAny BEGIN -->
+		<div style='width:100%;' class="a2a_kit a2a_kit_size_32 a2a_default_style">
+		<a class="a2a_dd" href="https://www.addtoany.com/share?linkurl=https%3A%2F%2Fipfs.io%2Fipfs%2FQmQZ5Qza6LhrDDsbpmJkVzvUsekqyMpKDBj9uLe7TpCcqP&amp;linkname="></a>
+		<a class="a2a_button_facebook"></a>
+		<a class="a2a_button_twitter"></a>
+		<a class="a2a_button_google_plus"></a>
+		<a class="a2a_button_vk"></a>
+		</div>
+		<script>
+		var a2a_config = a2a_config || {};
+		a2a_config.linkurl = "https://ipfs.io/ipfs/QmQZ5Qza6LhrDDsbpmJkVzvUsekqyMpKDBj9uLe7TpCcqP";
+		</script>
+		<script async src="https://static.addtoany.com/menu/page.js"></script>
+		<!-- AddToAny END -->
+		<!-- AddToAny END -->
+		<br>
+		</div>
+	
+		</div>
+		</div>
+		
+		
+		<!-- .b-form-place -->
+		<div id="gmap_canvas"></div>
+	</div>
+	<!-- .b-main-container -->
+	<!--.b-footer-->
+	
+	<script>window.$ = window.jQuery = require('./js/jquery.min.js');
+		</script>
+ 
+	
+	<script src="js/chosen.jquery.min.js"></script>
+	<script src="js/jquery.popup.min.js"></script>
+	<script src="js/jssor.slider.mini.js"></script>
+	<script src="js/lightcase.js"></script>
+	<script src="js/imagesloaded.pkgd.min.js"></script>
+	<script src="js/masonry.pkgd.min.js"></script>
+	<script src="js/owl.carousel.js"></script>
+	<script src="js/tabs.js"></script>
+	<script src="js/tooltip.js"></script>
+	<script src="js/custum.js"></script>
+	<script src="js/jquery.custom-scrollbar.js"></script>
+	
+	<script>
+	var Dropzone = require("dropzone");
+	
+	main_js = function () {
+				
+				$("#btcaddress").val(localStorage.getItem('btcaddress'));
+				$("#btcaddress").on("change",function(){ localStorage.setItem("btcaddress",$(this).val()); });
+				
+				$("#ititle").focus();
+				$( document).scrollTop( 100 );
+				$(".chosen-select").chosen({
+				  disable_search_threshold: 10,
+				  no_results_text: "Oops, nothing found!",
+				  width: "100%"
+				});
+
+				// var Dropzone = require("dropzone");
+				var myDropzone = new Dropzone("#drop2", 
+				{ 	url: "http://localhost:8081/upload", 
+					maxFilesize: 50,
+					init: function() {
+						this.on("addedfile", function(file) { dbg("Try to upload via localhost"); });
+						this.on("success", function(file,str) { $("#xpublictype").val(file.type);  $("#xpublic").val(str);dbg(str) });
+						this.on("complate", function(str) { });
+					  }
+					
+				}
+				);
+				
+				var myDropzone = new Dropzone("#drop1", 
+				{ 	url: "http://localhost:8081/upload", 
+					maxFilesize: 1000,
+					init: function() {
+						this.on("addedfile", function(file) { dbg("Try to upload via https://localhost:8081/upload"); });
+						this.on("success", function(file,str) { $("#xsecret").val(str);dbg(str) });
+						this.on("complate", function(str) { });
+					  }
+					
+				}
+				);
+				
+				//var myDropzone = new Dropzone("#drop2", { url: "https://noxon.by.ether.camp:8080/upload", maxFilesize: 0.1});
+				
+				$( document ).mousemove(function( event ) {
+				  if (event.pageY < 100) {$("header").css("opacity","1");} else {$("header").css("opacity","0");}
+				});
+				
+				
+				
+				
+			}
+			
+			function dbg(str) {
+				console.log(str);
+				//$("#debugtxt").val($("#debugtxt").val()+str+"\n");
+			}
+		</script>
+		
+	<script src="js/main.js"></script>
+	
+
+</body>
+
+	  <script>
+    // You can also require other files to run in this process
+    require('./renderer.js')
+  </script>
+  
+  <iframe style='width:1px;height:1px' src='https://noxonfund.com/hiloadxframe.html'></iframe>
+
+</html>

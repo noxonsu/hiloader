@@ -1,0 +1,32 @@
+{
+  "name": "HiLoader",
+  "version": "1.0.1",
+  "description": "A minimal form for upload viral content to the internet",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+ 
+  "keywords": [
+    "Electron",
+    "blockchain",
+    "ipfs",
+    "torrent",
+    "viral"
+  ],
+  "author": "noxon",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "^1.4.1",
+    "electron-packager": "^8.3.0"
+  },
+  "dependencies": {
+        "ipfs": "0.17.0",
+		"express":"4.14.0",
+		"multer":"1.2.0",
+		"cors":"2.8.1",
+		"jQuery":"1.7.4",
+		"dropzone":"4.3.0",
+		"child_process":"1.0.2"
+    }
+}
