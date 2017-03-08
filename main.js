@@ -1,6 +1,12 @@
 const electron = require('electron')
+const fs = require('fs');
+
 // Module to control application life.
-const app = electron.app
+
+
+const app = electron.app;
+const Tray = electron.Tray;
+const Menu = electron.Menu;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
 
@@ -11,6 +17,17 @@ const exec = require('child_process').exec;
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
+
+
+function getUserHome() {
+  return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
+}
+
+/* todo unlock file
+if (fs.existsSync(getUserHome()+"/.ipfs/repo.lock")) {
+	fs.closeSync(getUserHome()+"/.ipfs/repo.lock");
+	fs.unlink(getUserHome()+"/.ipfs/repo.lock");
+} */
 
 function createWindow () {
   // Create the browser window.
@@ -25,19 +42,41 @@ function createWindow () {
 
   // Open the DevTools.
   //mainWindow.webContents.openDevTools()
-
+	mainWindow.on('minimize',function(event){
+        event.preventDefault()
+            mainWindow.hide();
+    });
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
 	
-	a.kill();
-	b.kill();
+	if (a) a.kill();
+	if (b) b.kill();
 	exec("TaskKill /F /IM ipfs.exe");
 	
     mainWindow = null
   })
+  
+  var contextMenu = Menu.buildFromTemplate([
+
+        { label: 'Show App', click:  function(){
+            mainWindow.show();
+        } },
+        { label: 'Quit', click:  function(){
+            application.isQuiting = true;
+            application.quit();
+
+        } }
+    ]);
+var appIcon = null;
+    appIcon = new Tray('./img/star_rating.png');
+
+    appIcon.setToolTip('Electron.js App');
+    appIcon.setContextMenu(contextMenu);
+	
+	
 }
 
 // This method will be called when Electron has finished
@@ -63,12 +102,11 @@ app.on('activate', function () {
 })
 
 
-
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
 var IPFS = require('ipfs');
-var fs = require('fs');
+
 var express = require("express");
 var multer  = require('multer');
 var cors = require('cors');
@@ -76,6 +114,26 @@ var cors = require('cors');
 var node;
 
 var ipfsAPI = require('ipfs-api')
+
+//install ipfs
+
+if (!fs.existsSync("./go-ipfs")) {
+   var a = exec('node src/bin.js', (err, stdout, stderr) => {
+	console.log("intalation ipfs",stdout);
+	 console.log("err",err);
+		var a = exec('go-ipfs\\ipfs.exe init', (err, stdout, stderr) => {
+		 console.log(err);
+			 var b = exec('go-ipfs\\ipfs.exe daemon', (err, stdout, stderr) => {
+			 console.log(err);
+			});
+		});
+	});
+} else {
+	
+	var b = exec('go-ipfs\\ipfs.exe daemon', (err, stdout, stderr) => {
+		 console.log(err);
+		});
+}
 
 // connect to ipfs daemon API server
 var ipfs = ipfsAPI('localhost', '5001', {protocol: 'http'})
@@ -86,12 +144,7 @@ var node = new IPFS();
 
 //TODO run before upload
 
-var a = exec('ipfs.exe init', (err, stdout, stderr) => {
-	 console.log(err);
-	});
-var b = exec('ipfs.exe daemon', (err, stdout, stderr) => {
-	 console.log(err);
-	});
+
 
 
 
