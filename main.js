@@ -23,11 +23,11 @@ function getUserHome() {
   return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
 }
 
-/* todo unlock file
+
 if (fs.existsSync(getUserHome()+"/.ipfs/repo.lock")) {
-	fs.closeSync(getUserHome()+"/.ipfs/repo.lock");
+	//fs.closeSync(getUserHome()+"/.ipfs/repo.lock");
 	fs.unlink(getUserHome()+"/.ipfs/repo.lock");
-} */
+} 
 
 function createWindow () {
   // Create the browser window.
@@ -52,7 +52,6 @@ function createWindow () {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
 	
-	if (a) a.kill();
 	if (b) b.kill();
 	exec("TaskKill /F /IM ipfs.exe");
 	
@@ -71,7 +70,7 @@ function createWindow () {
         } }
     ]);
 var appIcon = null;
-    appIcon = new Tray('./img/star_rating.png');
+    appIcon = new Tray('img/star_rating.png');
 
     appIcon.setToolTip('Electron.js App');
     appIcon.setContextMenu(contextMenu);
@@ -114,25 +113,42 @@ var cors = require('cors');
 var node;
 
 var ipfsAPI = require('ipfs-api')
+var ipfsdep = require('go-ipfs-dep')
 
 //install ipfs
 
 if (!fs.existsSync("./go-ipfs")) {
-   var a = exec('node src/bin.js', (err, stdout, stderr) => {
-	console.log("intalation ipfs",stdout);
-	 console.log("err",err);
-		var a = exec('go-ipfs\\ipfs.exe init', (err, stdout, stderr) => {
+	
+	
+	const ierror = (err) => {
+	  console.log(`${err}\n`)
+	  console.log(`Download failed!\n\n`)
+	}
+
+	const isuccess = (output) => {
+	  console.log(`Downloaded ${output.fileName}\n`)
+	  console.log(`Installed go-${output.fileName.replace('.tar.gz', '').replace('.zip', '').replace(/_/g, ' ')} to ${output.installPath}\n`)
+		
+		var b = exec('go-ipfs\\ipfs.exe init', (err, stdout, stderr) => {
 		 console.log(err);
+		 var b = exec('go-ipfs\\ipfs.exe daemon', (err, stdout, stderr) => {
+			 console.log(err);
+			});
+		});
+	}
+	
+	ipfsdep()
+	  .then(isuccess)
+	  .catch(ierror);
+
+} else {
+	exec('taskkill /IM ipfs /f', (err, stdout, stderr) => { //taskkill /IM ipfs
+		 console.log("daemon stop",err);
 			 var b = exec('go-ipfs\\ipfs.exe daemon', (err, stdout, stderr) => {
 			 console.log(err);
 			});
 		});
-	});
-} else {
 	
-	var b = exec('go-ipfs\\ipfs.exe daemon', (err, stdout, stderr) => {
-		 console.log(err);
-		});
 }
 
 // connect to ipfs daemon API server
